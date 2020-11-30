@@ -12,20 +12,16 @@ import './home.css'
 
 // 页面渲染专用数组。
 const pages = [
-    { title: '首页', icon: 'ind',       path: '/home/index',    component: Index },
+    { title: '首页', icon: 'ind',       path: '/home',    component: Index, exact: true },
     { title: '找房', icon: 'findHouse', path: '/home/list',     component: HouseList },
     { title: '资讯', icon: 'infom',     path: '/home/news',     component: News },
     { title: '我的', icon: 'my',        path: '/home/profile',  component: Profile },
 ]
 
 export default class Home extends Component {
-    get currentPathname() {
-        return this.props.location.pathname;
-    }
-
     // 渲染路由。
     renderRouteList() {
-        return pages.map(({ path, component }) => <Route key={path} path={path} component={component} />)
+        return pages.map(({ path, component, exact }) => <Route exact={exact} key={path} path={path} component={component} />)
     }
 
     renderTabBar() {
@@ -37,7 +33,7 @@ export default class Home extends Component {
                         key={i.icon}
                         icon={<span className={`iconfont icon-${i.icon}`} />}
                         selectedIcon={<span className={`iconfont icon-${ i.icon }`} />}
-                        selected={this.currentPathname === i.path}
+                        selected={this.props.location.pathname === i.path}
                         onPress={() => this.props.history.replace(i.path)}
                     >
                     </TabBar.Item>
