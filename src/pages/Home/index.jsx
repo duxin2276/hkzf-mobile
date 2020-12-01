@@ -19,6 +19,7 @@ const pages = [
 ]
 
 export default class Home extends Component {
+    
     // 渲染路由。
     renderRouteList() {
         return pages.map(({ path, component, exact }) => <Route exact={exact} key={path} path={path} component={component} />)
