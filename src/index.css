@@ -13,6 +13,11 @@ html, body {
     background-color: #fff;
 }
 
+#root,
+.app {
+    height: 100%;
+}
+
 ul, ol {
     list-style: none;
 }
