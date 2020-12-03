@@ -31,9 +31,9 @@ export default class Index extends Component {
     }
 
     async getCurrentCity() {
-        const res = await Location.currentCity();
+        const { label: currentCity} = await Location.currentCity();
 
-        this.setState({ currentCity: res.label })
+        this.setState({ currentCity });
     }
 
     componentDidMount() {
