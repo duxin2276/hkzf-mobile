@@ -4,7 +4,7 @@ import { List, AutoSizer } from 'react-virtualized'
 
 import './citylist.less'
 import { Location } from "../../utils/location";
-import {NavHeader} from "../../components/NavHeader";
+import NavHeader from "../../components/NavHeader";
 
 const HOUSE_CITY_LIST = ['北京', '上海', '广州', '深圳']
 

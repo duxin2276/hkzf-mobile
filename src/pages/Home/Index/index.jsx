@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { Carousel, Grid, Flex, WingBlank } from 'antd-mobile'
 
+import { BASE_URL } from '../../../utils/api'
+
 import './index.less'
 
 import Nav1 from '../../../assets/images/nav-1.png'
@@ -16,6 +18,8 @@ const navList = [
     { title: '去出租', src: Nav4, path: '/rent' },
 ]
 
+console.log(BASE_URL);
+
 export default class Index extends Component {
     state = {
         carouselList: [],
@@ -25,13 +29,13 @@ export default class Index extends Component {
     }
 
     async getList(partialUrl, stateName) {
-        const res = await (await fetch(`http://127.0.0.1:8080${ partialUrl }`)).json();
+        const res = await (await fetch(`${ BASE_URL }${ partialUrl }`)).json();
 
         this.setState({ [stateName]: res.body })
     }
 
     async getCurrentCity() {
-        const { label: currentCity} = await Location.currentCity();
+        const { label: currentCity } = await Location.currentCity();
 
         this.setState({ currentCity });
     }
@@ -46,12 +50,12 @@ export default class Index extends Component {
 
     renderCarousel() {
         const { carouselList } = this.state;
-            
+
         return (
             <Carousel key={carouselList.length} infinite autoplay>
                 {carouselList.map((i, idx) => (
                     <a key={idx} href="#">
-                        <img src={`http://127.0.0.1:8080${i.imgSrc}`} alt=""/>
+                        <img src={`${ BASE_URL }${ i.imgSrc }`} alt="" />
                     </a>
                 ))}
             </Carousel>
@@ -90,7 +94,7 @@ export default class Index extends Component {
                                 <p className="title">{item.title}</p>
                                 <span className="info">{item.desc}</span>
                             </div>
-                            <img src={`http://127.0.0.1:8080${ item.imgSrc }`} alt="" />
+                            <img src={`${ BASE_URL }${ item.imgSrc }`} alt="" />
                         </Flex>
                     )}
                 />
