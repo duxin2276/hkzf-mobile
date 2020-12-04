@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {NavHeader} from '../../components/NavHeader';
 
 import './map.less'
 
@@ -23,6 +24,7 @@ export default class Map extends Component {
     render() {
         return (
             <div className="map">
+                <NavHeader>地图找房</NavHeader>
                 {/* 地图容器 */}
                 <div className="container"></div>
             </div>

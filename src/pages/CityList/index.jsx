@@ -4,6 +4,7 @@ import { List, AutoSizer } from 'react-virtualized'
 
 import './citylist.less'
 import { Location } from "../../utils/location";
+import {NavHeader} from "../../components/NavHeader";
 
 const HOUSE_CITY_LIST = ['北京', '上海', '广州', '深圳']
 
@@ -131,11 +132,12 @@ export default class CityList extends PureComponent {
         return (
             <div className="city-list">
                 {/* 顶部导航区域 */}
-                <NavBar
+                {/* <NavBar
                     mode="light"
                     icon={<Icon type="left" />}
                     onLeftClick={() => this.props.history.goBack()}
-                >城市选择</NavBar>
+                >城市选择</NavBar> */}
+                <NavHeader>城市列表</NavHeader>
                 {/* 城市列表区域 */}
                 <AutoSizer>{
                     ({ width, height }) => (
