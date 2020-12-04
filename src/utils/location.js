@@ -15,4 +15,8 @@ export class Location {
             })
         });
     }
+
+    static saveCity(city) {
+        localStorage[CURRENT_CITY_KEY] = JSON.stringify(city);
+    }
 }

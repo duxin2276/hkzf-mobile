@@ -1,9 +1,11 @@
-import React, { Component } from "react";
-import { NavBar, Icon } from 'antd-mobile';
+import React, { Component, PureComponent } from "react";
+import { NavBar, Icon, Toast } from 'antd-mobile';
 import { List, AutoSizer } from 'react-virtualized'
 
 import './citylist.less'
 import { Location } from "../../utils/location";
+
+const HOUSE_CITY_LIST = ['北京', '上海', '广州', '深圳']
 
 const parseCityList = function(list) {
     // 准备接收的空对象。
@@ -32,11 +34,14 @@ const letterMapper = {
 
 const parseLetter = letter => letterMapper[letter] || letter.toUpperCase();
 
-export default class CityList extends Component {
+export default class CityList extends PureComponent {
+    listElement = null
+
     state = {
         cityManifest: {},
         cityIndexes: [],
-        activeIndex: 3
+        activeIndex: 0,
+        manual: false
     }
 
     async getCityList() {
@@ -54,11 +59,18 @@ export default class CityList extends Component {
         cityManifest['#'] = [currentCity];
         cityIndexes.unshift('#');
 
-        this.setState({ cityManifest, cityIndexes });
+        this.setState({ cityManifest, cityIndexes }, () => this.listElement.measureAllRows());
     }
 
     componentDidMount() {
         this.getCityList()
+    }
+
+    cityChooseHandler({ label, value }) {
+        if (HOUSE_CITY_LIST.includes(label)) {
+            Location.saveCity({ label, value });
+            this.props.history.goBack();
+        } else Toast.info('该城市没有房源！', undefined, undefined, false)
     }
 
     rowRenderer({
@@ -74,7 +86,7 @@ export default class CityList extends Component {
         return (
             <div key={key} style={style} className="city">
                 <div className="title">{parseLetter(letter)}</div>
-                {cityList.map(i => <div key={i.value} className="name">{i.label}</div>)}
+                {cityList.map(i => <div key={i.value} className="name" onClick={this.cityChooseHandler.bind(this, i) }>{i.label}</div>)}
             </div>
 
         );
@@ -97,7 +109,10 @@ export default class CityList extends Component {
         return (
             <ul className="city-index">
                 {cityIndexes.length > 2 && cityIndexes.map((i, idx) => (
-                    <li key={i} className="city-index-item">
+                    <li key={i} className="city-index-item" onClick={() => {
+                        this.listElement.scrollToRow(idx);
+                        this.setState({ activeIndex: idx, manual: true })
+                    }}>
                         <span className={idx === activeIndex ? 'index-active' : undefined }>{i.toUpperCase()}</span>
                     </li>
                 ))}
@@ -105,7 +120,14 @@ export default class CityList extends Component {
         )
     }
 
+    onRowsRendered({ startIndex }) {
+        const { manual, activeIndex } = this.state;
+        // 判断上一次移动是否是用户操作。
+        this.setState({ activeIndex: manual ? activeIndex : startIndex, manual: false });
+    }
+
     render() {
+        console.log('渲染了');
         return (
             <div className="city-list">
                 {/* 顶部导航区域 */}
@@ -118,11 +140,14 @@ export default class CityList extends Component {
                 <AutoSizer>{
                     ({ width, height }) => (
                         <List
+                            ref={el => this.listElement = el}
                             width={width}
                             height={height - 45}
+                            scrollToAlignment="start"
                             rowCount={this.state.cityIndexes.length}
                             rowHeight={this.rowHeight.bind(this)}
                             rowRenderer={this.rowRenderer.bind(this)}
+                            onRowsRendered={this.onRowsRendered.bind(this)}
                         />
                     )
                 }</AutoSizer>
