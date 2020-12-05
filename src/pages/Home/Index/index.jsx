@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Carousel, Grid, Flex, WingBlank } from 'antd-mobile'
 
-import { BASE_URL } from '../../../utils/api'
+import { API, BASE_URL } from '../../../utils/api'
 
 import './index.less'
 
@@ -28,8 +28,9 @@ export default class Index extends Component {
         currentCity: '定位中'
     }
 
-    async getList(partialUrl, stateName) {
-        const res = await (await fetch(`${ BASE_URL }${ partialUrl }`)).json();
+    async getList(partialUrl, stateName, params) {
+        // const res = await (await fetch(`${ BASE_URL }${ partialUrl }`)).json();
+        const res = await API.get(partialUrl, params);
 
         this.setState({ [stateName]: res.body })
     }
@@ -42,8 +43,8 @@ export default class Index extends Component {
 
     componentDidMount() {
         this.getList('/home/swiper', 'carouselList');
-        this.getList('/home/groups?area=AREA|88cff55c-aaa4-e2e0', 'groupList');
-        this.getList('/home/news?area=AREA|88cff55c-aaa4-e2e0', 'newsList');
+        this.getList('/home/groups', 'groupList', {area:'AREA|88cff55c-aaa4-e2e0'});
+        this.getList('/home/news', 'newsList', { area: 'AREA|88cff55c-aaa4-e2e0' });
 
         this.getCurrentCity();
     }
