@@ -5,6 +5,7 @@ import { List, AutoSizer } from 'react-virtualized'
 import './citylist.less'
 import { Location } from "../../utils/location";
 import NavHeader from "../../components/NavHeader";
+import { API } from "../../utils/api";
 
 const HOUSE_CITY_LIST = ['北京', '上海', '广州', '深圳']
 
@@ -46,8 +47,11 @@ export default class CityList extends PureComponent {
     }
 
     async getCityList() {
-        const res = await (await fetch('http://127.0.0.1:8080/area/city?level=1')).json();
-        const hotRes = await (await fetch('http://127.0.0.1:8080/area/hot')).json();
+        // const res = await (await fetch('http://127.0.0.1:8080/area/city?level=1')).json();
+        // const hotRes = await (await fetch('http://127.0.0.1:8080/area/hot')).json();
+        const res = await API.get('/area/city', { level: 1 })
+        const hotRes = await API.get('/area/hot');
+
         const currentCity = await Location.currentCity()
 
         const { cityManifest, cityIndexes } = parseCityList(res.body);

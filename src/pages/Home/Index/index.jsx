@@ -10,6 +10,7 @@ import Nav2 from '../../../assets/images/nav-2.png'
 import Nav3 from '../../../assets/images/nav-3.png'
 import Nav4 from '../../../assets/images/nav-4.png'
 import { Location } from "../../../utils/location";
+import SearchHeader from "../../../components/SearchHeader";
 
 const navList = [
     { title: '整租', src: Nav1, path: '/home/list' },
@@ -133,33 +134,7 @@ export default class Index extends Component {
                     {/* 轮播图区域 */}
                     {this.renderCarousel()}
                     {/* 搜索条区域 */}
-                    <Flex className="search-box">
-                        {/* 左侧白色区域 */}
-                        <Flex className="search">
-                            {/* 位置 */}
-                            <div
-                                className="location"
-                                onClick={() => this.props.history.push('/citylist')}
-                            >
-                                <span className="name">{this.state.currentCity}</span>
-                                <i className="iconfont icon-arrow" />
-                            </div>
-
-                            {/* 搜索表单 */}
-                            <div
-                                className="form"
-                                onClick={() => this.props.history.push('/search')}
-                            >
-                                <i className="iconfont icon-seach" />
-                                <span className="text">请输入小区或地址</span>
-                            </div>
-                        </Flex>
-                        {/* 右侧地图图标 */}
-                        <i
-                            className="iconfont icon-map"
-                            onClick={() => this.props.history.push('/map')}
-                        />
-                    </Flex>
+                    <SearchHeader cityName={this.state.currentCity } />
 
                 </div>
                 {/* 导航区域 */}
