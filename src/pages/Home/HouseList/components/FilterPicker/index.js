@@ -10,16 +10,16 @@ export default class FilterPicker extends Component {
     }
 
     render() {
-        const { onCancel, dataSource, cols } = this.props
+        const { onCancel, onSave, dataSource, cols } = this.props
         const { value } = this.state
 
         return (
             <>
                 {/* 选择器组件： */}
-                <PickerView data={dataSource} value={value} cols={cols} onChange={value => this.setState({ value }, () => console.log(this.state))} />
+                <PickerView data={dataSource} value={value} cols={cols} onChange={value => this.setState({ value })} />
 
                 {/* 底部按钮 */}
-                <FilterFooter onCancel={onCancel} />
+                <FilterFooter onCancel={onCancel} onOk={() => onSave(value)} />
             </>
         )
     }
