@@ -6,20 +6,45 @@ import { Location } from "../../../utils/location";
 import Filter from './components/Filter'
 
 import styles from './houselist.module.css'
+import { API } from "../../../utils/api";
 
 export default class HouseList extends Component {
     state = {
-        currentCity: '定位中'
+        currentCity: '定位中',
+        cityId: '',
+        count: 0,
+        list: []
+    }
+
+    pageNum = 1
+
+    filters = null
+
+    get filterParams() {
+        const edge = this.pageNum * 20
+        return { cityId: this.state.cityId, ...this.filters, start: edge - 19, end: edge }
     }
 
     async getCurrentCity() {
-        const { label: currentCity } = await Location.currentCity();
+        const { label: currentCity, value: cityId } = await Location.currentCity();
 
-        this.setState({ currentCity });
+        this.setState({ currentCity, cityId });
     }
 
-    componentDidMount() {
-        this.getCurrentCity();
+    async getHouseList() {
+        const { body: { count, list } } = await API.get('/houses', this.filterParams)
+
+        this.setState({ count, list }, () => console.log(this.state));
+    }
+
+    async componentDidMount() {
+        await this.getCurrentCity();
+        this.getHouseList();
+    }
+
+    onFilter(filters) {
+        this.filters = filters;
+        this.getHouseList();
     }
 
     render() {
@@ -30,7 +55,7 @@ export default class HouseList extends Component {
                     <SearchHeader cityName={this.state.currentCity} className={styles.searchHeader} />
                 </Flex>
                 {/* 条件筛选 */}
-                <Filter />
+                <Filter onFilter={this.onFilter.bind(this)} />
             </div>
         )
     }

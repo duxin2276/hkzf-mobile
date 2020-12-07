@@ -27,6 +27,20 @@ export default class Filter extends Component {
             8: []
         }
     }
+
+    onFilter() {
+        const { selectedValues } = this.state;
+
+        const params = {
+            [selectedValues[1][0]]: selectedValues[1][2] === 'null' ? selectedValues[1][1] : selectedValues[1][2] || 'null',
+            rentType: selectedValues[2][0],
+            price: selectedValues[4][0],
+            more: selectedValues[8].join(',')
+        }
+
+        console.log(params);
+        this.props.onFilter(params);
+    }
     
     // 高亮状态（强行点亮+过去选中判断）。
     get highlightStatus() {
@@ -99,13 +113,13 @@ export default class Filter extends Component {
     onSave(value) {
         const { selectedValues, titleStatus } = this.state;
 
-        this.setState({ selectedValues: { ...selectedValues, [titleStatus]: value }, titleStatus: 0 }, () => console.log(this.state))
+        this.setState({ selectedValues: { ...selectedValues, [titleStatus]: value }, titleStatus: 0 }, () => this.onFilter())
     }
 
     render() {
         const { titleStatus } = this.state
 
-        // console.log(this.moreDataSource);
+        console.log(this.state.selectedValues);
 
         return (
             <div className={styles.root}>
@@ -120,7 +134,7 @@ export default class Filter extends Component {
                     {this.showPicker && <FilterPicker key={titleStatus} dataSource={this.pickerDataSource} defaultValue={this.currentSelectdValue} cols={titleStatus === 1 ? 3 : 1} onSave={this.onSave.bind(this)} onCancel={this.onCancel.bind(this)} /> }
 
                     {/* 最后一个菜单对应的内容： */}
-                    {this.showMore && <FilterMore dataSource={this.moreDataSource} />}
+                    {this.showMore && <FilterMore dataSource={this.moreDataSource} defaultValue={this.currentSelectdValue} onSave={this.onSave.bind(this)} onCancel={this.onCancel.bind(this) } />}
                 </div>
             </div>
         )
