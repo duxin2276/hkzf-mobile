@@ -13,7 +13,18 @@ export default class Filter extends Component {
     state = {
         // 高亮状态（强行点亮+过去选中判断）。
         titleStatus: 0,
-        filterData: undefined
+        filterData: undefined,
+        selectedValues: {
+            1: [],
+            2: [],
+            4: [],
+            8: []
+        }
+    }
+
+    get currentSelectdValue() {
+        const { selectedValues, titleStatus } = this.state;
+        return selectedValues[titleStatus]
     }
 
     get showPicker() {
@@ -66,7 +77,7 @@ export default class Filter extends Component {
                     <FilterTitle changeStatus={this.changeStatusHandler.bind(this) } titleStatus={ titleStatus } />
 
                     {/* 前三个菜单对应的内容： */}
-                    {this.showPicker && <FilterPicker dataSource={this.pickerDataSource} cols={titleStatus === 1 ? 3: 1 } onCancel={this.onCancel.bind(this)} /> }
+                    {this.showPicker && <FilterPicker dataSource={this.pickerDataSource} defaultValue={this.currentSelectdValue } cols={titleStatus === 1 ? 3: 1 } onCancel={this.onCancel.bind(this)} /> }
 
                     {/* 最后一个菜单对应的内容： */}
                     {/* <FilterMore /> */}
