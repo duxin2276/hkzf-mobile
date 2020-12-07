@@ -53,6 +53,10 @@ export default class Filter extends Component {
         return !!(this.state.titleStatus & 7)
     }
 
+    get showMore() {
+        return this.state.titleStatus === 8;
+    }
+
     get pickerDataSource() {
         const { titleStatus, filterData: { area, subway, rentType, price } = {} } = this.state;
 
@@ -63,6 +67,12 @@ export default class Filter extends Component {
         };
 
         return dataCollection[titleStatus];
+    }
+
+    get moreDataSource() {
+        const { filterData: { area, subway, rentType, price, ...rest } = {} } = this.state
+
+        return rest;
     }
 
     async getFilterData() {
@@ -95,6 +105,8 @@ export default class Filter extends Component {
     render() {
         const { titleStatus } = this.state
 
+        // console.log(this.moreDataSource);
+
         return (
             <div className={styles.root}>
                 {/* 前三个菜单的遮罩层 */}
@@ -108,7 +120,7 @@ export default class Filter extends Component {
                     {this.showPicker && <FilterPicker key={titleStatus} dataSource={this.pickerDataSource} defaultValue={this.currentSelectdValue} cols={titleStatus === 1 ? 3 : 1} onSave={this.onSave.bind(this)} onCancel={this.onCancel.bind(this)} /> }
 
                     {/* 最后一个菜单对应的内容： */}
-                    {/* <FilterMore /> */}
+                    {this.showMore && <FilterMore dataSource={this.moreDataSource} />}
                 </div>
             </div>
         )
