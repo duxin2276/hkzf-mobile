@@ -1,12 +1,15 @@
 import React, { Component } from "react";
 import { Flex } from "antd-mobile";
+import { WindowScroller, AutoSizer, List, InfiniteLoader } from 'react-virtualized'
 import SearchHeader from "../../../components/SearchHeader";
 import { Location } from "../../../utils/location";
 
 import Filter from './components/Filter'
 
 import styles from './houselist.module.css'
-import { API } from "../../../utils/api";
+import { API, BASE_URL } from "../../../utils/api";
+import HouseItem from "../../../components/HouseItem";
+import Sticky from "../../../components/Sticky";
 
 export default class HouseList extends Component {
     state = {
@@ -16,13 +19,13 @@ export default class HouseList extends Component {
         list: []
     }
 
-    pageNum = 1
+    // pageNum = 1
 
     filters = null
 
-    get filterParams() {
-        const edge = this.pageNum * 20
-        return { cityId: this.state.cityId, ...this.filters, start: edge - 19, end: edge }
+    filterParams(start = 1, end = 20) {
+        // const edge = this.pageNum * 20
+        return { cityId: this.state.cityId, ...this.filters, start, end }
     }
 
     async getCurrentCity() {
@@ -31,10 +34,11 @@ export default class HouseList extends Component {
         this.setState({ currentCity, cityId });
     }
 
-    async getHouseList() {
-        const { body: { count, list } } = await API.get('/houses', this.filterParams)
+    async getHouseList(start, end) {
+        const { list: originList } = this.state
+        const { body: { count, list } } = await API.get('/houses', this.filterParams(start, end))
 
-        this.setState({ count, list }, () => console.log(this.state));
+        this.setState({ count, list: [...originList, ...list] }, () => console.log(this.state));
     }
 
     async componentDidMount() {
@@ -47,7 +51,34 @@ export default class HouseList extends Component {
         this.getHouseList();
     }
 
+    houseItemRenderer({key, index, style}) {
+        const { list } = this.state;
+
+        const houseItem = list[index];
+
+        const { houseImg, houseCode, ...item } = houseItem || {};
+
+        const itemProps = {
+            ...item,
+            src: BASE_URL + houseImg
+        }
+
+        return houseItem ? <HouseItem key={key} style={style} {...itemProps} /> : <div key={key}>占位符</div>
+    }
+
+    async loadMoreRows({ startIndex, stopIndex }) {
+        const start = startIndex + 1, end = stopIndex + 1;
+
+        await this.getHouseList(start, end);
+    }
+
+    isRowLoaded({ index }) {
+        return !!this.state.list[index]
+    }
+
     render() {
+        const { count } = this.state
+
         return (
             <div>
                 {/* 顶部导航条 */}
@@ -55,7 +86,36 @@ export default class HouseList extends Component {
                     <SearchHeader cityName={this.state.currentCity} className={styles.searchHeader} />
                 </Flex>
                 {/* 条件筛选 */}
-                <Filter onFilter={this.onFilter.bind(this)} />
+                <Sticky><Filter onFilter={this.onFilter.bind(this)} /></Sticky>
+                {/* 房源列表展示 */}
+                <InfiniteLoader
+                    isRowLoaded={this.isRowLoaded.bind(this)}
+                    loadMoreRows={this.loadMoreRows.bind(this)}
+                    rowCount={count}
+                >
+                    {({ onRowsRendered, registerChild }) => (
+                        <WindowScroller>
+                            {({ isScrolling, scrollTop, height }) => (
+                                <AutoSizer>
+                                    {({ width }) => (
+                                        <List
+                                            ref={registerChild}
+                                            isScrolling={isScrolling}
+                                            autoHeight
+                                            scrollTop={scrollTop}
+                                            width={width}
+                                            height={height}
+                                            rowCount={count}
+                                            rowHeight={120}
+                                            rowRenderer={this.houseItemRenderer.bind(this)}
+                                            onRowsRendered={onRowsRendered}
+                                        />
+                                    )}
+                                </AutoSizer>
+                            )}
+                        </WindowScroller>
+                    )}
+                </InfiniteLoader>
             </div>
         )
     }
