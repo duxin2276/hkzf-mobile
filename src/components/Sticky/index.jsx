@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import './sticky.css'
 
-export default class Sticky extends Component {
+export default class Sticky extends PureComponent {
     // 为了支撑高度，要拿到一开始渲染好的高度，基于辅助元素： ref；
     // 拿到一开始距离页面顶端的距离；
     // 当页面滚动的时候，如果刚超过距离顶端的距离，则固定辅助元素。
@@ -38,6 +38,8 @@ export default class Sticky extends Component {
 
     render() {
         const { height, isFixed } = this.state;
+
+        console.log('我在渲染');
 
         return (
             <div style={{ height }}>     

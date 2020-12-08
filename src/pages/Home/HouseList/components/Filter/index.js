@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Spring } from 'react-spring/renderprops'
 
 import { API } from '../../../../../utils/api'
 import { Location } from '../../../../../utils/location'
@@ -119,12 +120,16 @@ export default class Filter extends Component {
     render() {
         const { titleStatus } = this.state
 
+        document.body.classList[titleStatus ? 'add' : 'remove']('body-fixed');
+
         console.log(this.state.selectedValues);
 
         return (
             <div className={styles.root}>
                 {/* 前三个菜单的遮罩层 */}
-                {this.showPicker && <div className={styles.mask} onClick={this.onCancel.bind(this)}/>}
+                <Spring from={{ opacity: 0 }} to={{ opacity: +this.showPicker }}>
+                    {style => style.opacity ? <div style={style} className={styles.mask} onClick={this.onCancel.bind(this)} /> : null}
+                </Spring>
 
                 <div className={styles.content}>
                     {/* 标题栏 */}

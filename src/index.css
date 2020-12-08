@@ -21,3 +21,7 @@ html, body {
 ul, ol {
     list-style: none;
 }
+
+.body-fixed {
+    overflow: hidden;
+}

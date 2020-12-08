@@ -53,6 +53,7 @@ export default class HouseList extends Component {
     }
 
     onFilter(filters) {
+        window.scrollTo(0, 0)
         this.filters = filters;
         this.getHouseList();
     }
