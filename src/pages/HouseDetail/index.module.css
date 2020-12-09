@@ -21,7 +21,7 @@
   height: 252px;
 }
 
-:global(.am-navbar-light) {
+.root :global(.am-navbar-light) {
   position: fixed;
   width: 100%;
   top: 0;
