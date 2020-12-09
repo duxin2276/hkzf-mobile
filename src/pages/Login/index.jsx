@@ -7,6 +7,7 @@ import NavHeader from '../../components/NavHeader'
 
 import styles from './index.module.css'
 import { API } from '../../utils/api'
+import { FormInput } from '../../components/FormInput'
 
 // 验证规则：
 // const REG_UNAME = /^[a-zA-Z_\d]{5,8}$/
@@ -51,7 +52,18 @@ class Login extends Component {
                 {/* 登录表单 */}
                 <WingBlank>
                     <form onSubmit={this.submitHandler.bind(this)}>
-                        <div className={styles.formItem}>
+                        <FormInput
+                            name="username"
+                            value={username}
+                            onChange={e => console.log(e)}
+                            regex=""
+                            isEmpty
+                            tipInfo="您输入的内容不符合规范"
+                            max={20}
+                            min={3}
+                            isPassword
+                        ></FormInput>
+                        {/* <div className={styles.formItem}>
                             <input
                                 className={styles.input}
                                 name="username"
@@ -59,7 +71,7 @@ class Login extends Component {
                                 value={username}
                                 onChange={this.inputChangeHandler.bind(this)}
                             />
-                        </div>
+                        </div> */}
                         {/* 长度为5到8位，只能出现数字、字母、下划线 */}
                         {/* <div className={styles.error}>账号为必填项</div> */}
                         <div className={styles.formItem}>
