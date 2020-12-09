@@ -70,7 +70,7 @@ export default class HouseList extends Component {
             src: BASE_URL + houseImg
         }
 
-        return houseItem ? <HouseItem key={key} style={style} {...itemProps} /> : <div key={key} style={{height: 120, border:'10px solid #fff', backgroundColor: '#eee'}}></div>
+        return houseItem ? <HouseItem onClick={() => this.props.history.push(`/detail/${ houseCode }`)} key={key} style={style} {...itemProps} /> : <div key={key} style={{height: 120, border:'10px solid #fff', backgroundColor: '#eee'}}></div>
     }
 
     async loadMoreRows({ startIndex, stopIndex }) {
