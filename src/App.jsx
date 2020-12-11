@@ -22,7 +22,7 @@ export default class App extends Component {
                     <Route path="/detail/:id" component={HouseDetail} />
                     <Route path="/login" component={Login} />
                     <Route path="/register" component={Register} />
-
+                    <AuthRoute path="/vip" render={props => <h1>邀请码：6TGO341, { props.location.pathname}</h1>} />
                 </div>
             </Router>
         )

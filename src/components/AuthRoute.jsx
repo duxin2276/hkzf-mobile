@@ -1,8 +1,8 @@
 import { Route, Redirect } from 'react-router-dom'
 import { Auth } from '../utils'
 
-export const AuthRoute = ({ path, component: Component, ...rest }) => (
+export const AuthRoute = ({ path, component: Component, render, ...rest }) => (
     <Route {...rest} path={path} render={props => Auth.isLogin ?
-        <Component {...props} /> :
+        render ? render(props) : <Component {...props} /> :
         <Redirect to={{ pathname: '/login', backUrl: path }} />} />
 )
