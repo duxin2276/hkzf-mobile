@@ -55,13 +55,19 @@ class Login extends Component {
                         <FormInput
                             name="username"
                             value={username}
-                            onChange={e => console.log(e)}
-                            regex=""
+                            onChange={({ name, value, validated }) => {
+
+                                console.log(name, value, validated);
+                                this.setState({ [name]: value })
+                            }}
+                            regex="^a{3}b+$"
                             isEmpty
                             tipInfo="您输入的内容不符合规范"
                             max={20}
                             min={3}
                             isPassword
+                        ></FormInput>
+                        <FormInput
                         ></FormInput>
                         {/* <div className={styles.formItem}>
                             <input
