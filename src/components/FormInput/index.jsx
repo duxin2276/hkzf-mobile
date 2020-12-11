@@ -2,16 +2,16 @@ import React, { Component } from 'react'
 
 import styles from './forminput.module.css'
 
-const tipsMapper = {
-    0: '错误',
-    10: '您输入的内容不符合要求，请修改您的内容。',
-    11: '您输入的内容为空',
-    12: '您输入的内容太短了',
-    13: '您输入的内容太长了',
-    20: ''
-}
-
 export class FormInput extends Component {
+    tipsMapper = {
+        0: '错误',
+        10: this.props.tipInfo || '您输入的内容不符合要求，请修改您的内容。',
+        11: '您输入的内容为空',
+        12: '您输入的内容太短了',
+        13: '您输入的内容太长了',
+        20: ''
+    }
+
     state = {
         value: this.props.value,
         status: 20
@@ -24,11 +24,11 @@ export class FormInput extends Component {
 
     // 组件内部报错文本的提示。
     get tips() {
-        return tipsMapper[this.state.status]
+        return this.tipsMapper[this.state.status]
     }
 
-    onChangeHandler({ target: { value } }) {
-        const { onChange, name, regex, isEmpty, max, min } = this.props;
+    validate(value) {
+        const { onChange, name, regex = '.*', isEmpty, max = 1000, min = 0 } = this.props;
         let status = 0;
 
         const length = value.length;
@@ -53,7 +53,14 @@ export class FormInput extends Component {
             // 将用户修改的值传递出去。
             onChange && onChange({ name, value, validated: this.isValidated })
         });
-        
+    }
+
+    onChangeHandler({ target: { value } }) {
+        this.validate(value);
+    }
+
+    onBlurHandler() {
+        this.validate.call(this, this.state.value);
     }
 
     render() {
@@ -63,7 +70,7 @@ export class FormInput extends Component {
         return (
             <>
                 <div className={styles['input-box']}>
-                    <input type={isPassword ? 'password' : 'text'} className={styles.input} value={value} onChange={this.onChangeHandler.bind(this)} />
+                    <input type={isPassword ? 'password' : 'text'} className={styles.input} value={value} onBlur={this.onBlurHandler.bind(this)} onChange={this.onChangeHandler.bind(this)} />
                 </div>
                 <p className={styles.tips}>{this.tips}</p>
             </>

@@ -15,16 +15,16 @@ import { FormInput } from '../../components/FormInput'
 
 class Login extends Component {
     state = {
-        username: '',
-        password: ''
+        username: ['', false],
+        password: ['', false]
     }
 
-    inputChangeHandler({ target: { name, value}}) {
-        this.setState({[name]: value})
+    inputChangeHandler({ name, value, validated }) {
+        this.setState({ [name]: [value, validated]})
     }
 
     async login() {
-        const { username, password } = this.state
+        const { username: [username], password: [password] } = this.state
 
         const { status, body, description} = await API.post('/user/login', { username, password });
 
@@ -35,10 +35,16 @@ class Login extends Component {
 
     submitHandler(e) {
         e.preventDefault();
-        // const { username, password } = this.state
+        const { username, password } = this.state
 
-        this.login()
+        if (username[1] && password[1]) this.login()
+        else {
+            this.refList.forEach(i => i.onBlurHandler())
+            Toast.fail('请输入正确的内容。')
+        }
     }
+
+    refList = []
 
     render() {
         const { username, password } = this.state
@@ -53,21 +59,22 @@ class Login extends Component {
                 <WingBlank>
                     <form onSubmit={this.submitHandler.bind(this)}>
                         <FormInput
+                            ref={el => this.refList[0] = el}
                             name="username"
-                            value={username}
-                            onChange={({ name, value, validated }) => {
-
-                                console.log(name, value, validated);
-                                this.setState({ [name]: value })
-                            }}
-                            regex="^a{3}b+$"
-                            isEmpty
-                            tipInfo="您输入的内容不符合规范"
+                            value={username[0]}
+                            onChange={this.inputChangeHandler.bind(this)}
+                            regex="^[a-zA-Z0-9]{3,20}$"
+                            max={20}
+                            min={3}
+                        ></FormInput>
+                        <FormInput
+                            ref={el => this.refList[1] = el}
+                            name="password"
+                            value={password[0]}
+                            onChange={this.inputChangeHandler.bind(this)}
                             max={20}
                             min={3}
                             isPassword
-                        ></FormInput>
-                        <FormInput
                         ></FormInput>
                         {/* <div className={styles.formItem}>
                             <input
@@ -80,16 +87,6 @@ class Login extends Component {
                         </div> */}
                         {/* 长度为5到8位，只能出现数字、字母、下划线 */}
                         {/* <div className={styles.error}>账号为必填项</div> */}
-                        <div className={styles.formItem}>
-                            <input
-                                className={styles.input}
-                                name="password"
-                                type="password"
-                                placeholder="请输入密码"
-                                value={ password}
-                                onChange={this.inputChangeHandler.bind(this)}
-                            />
-                        </div>
                         {/* 长度为5到12位，只能出现数字、字母、下划线 */}
                         {/* <div className={styles.error}>账号为必填项</div> */}
                         <div className={styles.formSubmit}>
