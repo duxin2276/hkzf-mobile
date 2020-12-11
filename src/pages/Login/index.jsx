@@ -31,7 +31,9 @@ class Login extends Component {
 
         if (status === 200) {
             Auth.token = body.token;
-            
+            // TODO: 以后专门返回。
+
+            this.props.history.goBack();
         } else Toast.fail(description)
     }
 

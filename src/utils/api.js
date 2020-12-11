@@ -12,13 +12,18 @@ const request = async (partialUrl, body, query, method = 'GET', contentType = 'a
     const needContent = ['POST', 'PUT'].includes(method);
     const needAuth = includePathList.some(i => partialUrl.startsWith(i)) && !excludePathList.some(i => partialUrl.startsWith(i))
 
-    return (await fetch(BASE_URL + partialUrl + (query ? queryString(query) : ''), {
+    const promise = (await fetch(BASE_URL + partialUrl + (query ? queryString(query) : ''), {
         body: contentType === 'application/json' ? JSON.stringify(body) : body,
         method, headers: {
             ...needContent ? { 'Content-Type': contentType } : {},
             ...needAuth ? { Authorization: Auth.token } : {}
         }
     })).json();
+
+    const { status } = await promise;
+    if (status === 400) Auth.clear();
+
+    return promise;
 }
 
 export class API {

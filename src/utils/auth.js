@@ -12,4 +12,8 @@ export class Auth {
     static get isLogin() {
         return !!this.token
     }
+
+    static clear() {
+        localStorage.removeItem(TOKEN_KEY)
+    }
 }

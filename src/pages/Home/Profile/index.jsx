@@ -37,7 +37,7 @@ const DEFAULT_AVATAR = BASE_URL + '/img/profile/avatar.png'
 export default class Profile extends Component {
   state = {
     // 是否登录
-    isLogin: Auth.isLogin,
+    isLogin: false,
     // 用户信息
     userInfo: {
       avatar: '',
@@ -51,11 +51,6 @@ export default class Profile extends Component {
   }
 
   async getUserInfo() {
-    if (!this.state.isLogin) {
-      // 未登录
-      return
-    }
-
     // 发送请求，获取个人资料
     const res = await API.get('/user')
 
@@ -66,9 +61,21 @@ export default class Profile extends Component {
         userInfo: {
           avatar: BASE_URL + avatar,
           nickname
-        }
+        },
+        isLogin: true
       })
     }
+  }
+
+  async logout() {
+    await API.post('/user/logout');
+    Auth.clear();
+    this.setState({
+      isLogin: false,
+      userInfo: {
+        avatar: '',
+        nickname: ''
+      }})
   }
 
   render() {
@@ -102,7 +109,7 @@ export default class Profile extends Component {
               {isLogin ? (
                 <>
                   <div className={styles.auth}>
-                    <span onClick={this.logout}>退出</span>
+                    <span onClick={this.logout.bind(this)}>退出</span>
                   </div>
                   <div className={styles.edit}>
                     编辑个人资料
