@@ -1,0 +1,15 @@
+export const TOKEN_KEY = 'TOKEN'
+
+export class Auth {
+    static set token(value) {
+        localStorage[TOKEN_KEY] = value;
+    }
+
+    static get token() {
+        return localStorage[TOKEN_KEY]
+    }
+
+    static get isLogin() {
+        return !!this.token
+    }
+}

@@ -21,6 +21,7 @@ export default class App extends Component {
                     <Route path="/detail/:id" component={HouseDetail} />
                     <Route path="/login" component={Login} />
                     <Route path="/register" component={Register} />
+
                 </div>
             </Router>
         )

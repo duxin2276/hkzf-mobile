@@ -8,6 +8,7 @@ import NavHeader from '../../components/NavHeader'
 import styles from './index.module.css'
 import { API } from '../../utils/api'
 import { FormInput } from '../../components/FormInput'
+import { Auth } from '../../utils'
 
 // 验证规则：
 // const REG_UNAME = /^[a-zA-Z_\d]{5,8}$/
@@ -29,7 +30,8 @@ class Login extends Component {
         const { status, body, description} = await API.post('/user/login', { username, password });
 
         if (status === 200) {
-
+            Auth.token = body.token;
+            
         } else Toast.fail(description)
     }
 
