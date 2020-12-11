@@ -8,6 +8,7 @@ import Map from './pages/Map'
 import HouseDetail from './pages/HouseDetail'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import { AuthRoute } from './components/AuthRoute'
 
 export default class App extends Component {
     render() {
@@ -17,7 +18,7 @@ export default class App extends Component {
                     <Route path="/" exact render={() => <Redirect to="/home" />} />
                     <Route path="/home" component={Home} />
                     <Route path="/citylist" component={CityList} />
-                    <Route path="/map" component={Map} />
+                    <AuthRoute path="/map" component={Map} />
                     <Route path="/detail/:id" component={HouseDetail} />
                     <Route path="/login" component={Login} />
                     <Route path="/register" component={Register} />

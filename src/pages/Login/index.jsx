@@ -32,8 +32,9 @@ class Login extends Component {
         if (status === 200) {
             Auth.token = body.token;
             // TODO: 以后专门返回。
+            const { location: { backUrl }, history } = this.props;
 
-            this.props.history.goBack();
+            backUrl ? history.replace(backUrl) : history.goBack();
         } else Toast.fail(description)
     }
 
@@ -51,6 +52,8 @@ class Login extends Component {
     refList = []
 
     render() {
+
+        console.log(this.props);
         const { username, password } = this.state
 
         return (
