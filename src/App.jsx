@@ -8,6 +8,9 @@ import Map from './pages/Map'
 import HouseDetail from './pages/HouseDetail'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import Rent from './pages/Rent'
+import RentAdd from './pages/Rent/Add'
+import RentSearch from './pages/Rent/Search'
 import { AuthRoute } from './components/AuthRoute'
 
 export default class App extends Component {
@@ -22,6 +25,10 @@ export default class App extends Component {
                     <Route path="/detail/:id" component={HouseDetail} />
                     <Route path="/login" component={Login} />
                     <Route path="/register" component={Register} />
+                    <Route path="/rent" exact component={Rent} />
+                    <Route path="/rent/add" component={RentAdd} />
+                    <Route path="/rent/search" component={RentSearch} />
+
                     <AuthRoute path="/vip" render={props => <h1>邀请码：6TGO341, { props.location.pathname}</h1>} />
                 </div>
             </Router>
