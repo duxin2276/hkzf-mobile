@@ -31,6 +31,10 @@ export class API {
         return request(partialUrl, undefined, query)
     }
 
+    static delete(partialUrl, query) {
+        return request(partialUrl, undefined, query, 'DELETE')
+    }
+
     static post(partialUrl, body, query, contentType) {
         return request(partialUrl, body, query, 'POST', contentType)
     }
