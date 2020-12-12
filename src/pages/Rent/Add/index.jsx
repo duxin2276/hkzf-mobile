@@ -14,6 +14,7 @@ import NavHeader from '../../../components/NavHeader'
 import HousePackge from '../../../components/HousePackage'
 
 import styles from './index.module.css'
+import { Consumer } from '../../../store'
 
 const alert = Modal.alert
 
@@ -96,7 +97,6 @@ export default class RentAdd extends Component {
     const Item = List.Item
     const { history } = this.props
     const {
-      community,
       price,
       roomType,
       floor,
@@ -104,100 +104,102 @@ export default class RentAdd extends Component {
       description,
       tempSlides,
       title
-    } = this.state
+    } = this.state;
 
     return (
-      <div className={styles.root}>
-        <NavHeader onLeftClick={this.onCancel}>发布房源</NavHeader>
+      <Consumer>{({ community }) => (
+        <div className={styles.root}>
+          <NavHeader onLeftClick={this.onCancel}>发布房源</NavHeader>
 
-        <List
-          className={styles.header}
-          renderHeader={() => '房源信息'}
-          data-role="rent-list"
-        >
-          {/* 选择所在小区 */}
-          <Item
-            extra={community.name || '请输入小区名称'}
-            arrow="horizontal"
-            onClick={() => history.replace('/rent/search')}
+          <List
+            className={styles.header}
+            renderHeader={() => '房源信息'}
+            data-role="rent-list"
           >
-            小区名称
+            {/* 选择所在小区 */}
+            <Item
+              extra={community.communityName || '请输入小区名称'}
+              arrow="horizontal"
+              onClick={() => history.push('/rent/search')}
+            >
+              小区名称
           </Item>
-          <InputItem placeholder="请输入租金/月" extra="￥/月" value={price}>
-            租&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;金
+            <InputItem placeholder="请输入租金/月" extra="￥/月" value={price}>
+              租&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;金
           </InputItem>
-          <InputItem placeholder="请输入建筑面积" extra="㎡">
-            建筑面积
+            <InputItem placeholder="请输入建筑面积" extra="㎡">
+              建筑面积
           </InputItem>
-          <Picker data={roomTypeData} value={[roomType]} cols={1}>
-            <Item arrow="horizontal">
-              户&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型
+            <Picker data={roomTypeData} value={[roomType]} cols={1}>
+              <Item arrow="horizontal">
+                户&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型
             </Item>
-          </Picker>
+            </Picker>
 
-          <Picker data={floorData} value={[floor]} cols={1}>
-            <Item arrow="horizontal">所在楼层</Item>
-          </Picker>
-          <Picker data={orientedData} value={[oriented]} cols={1}>
-            <Item arrow="horizontal">
-              朝&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;向
+            <Picker data={floorData} value={[floor]} cols={1}>
+              <Item arrow="horizontal">所在楼层</Item>
+            </Picker>
+            <Picker data={orientedData} value={[oriented]} cols={1}>
+              <Item arrow="horizontal">
+                朝&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;向
             </Item>
-          </Picker>
-        </List>
+            </Picker>
+          </List>
 
-        <List
-          className={styles.title}
-          renderHeader={() => '房屋标题'}
-          data-role="rent-list"
-        >
-          <InputItem
-            placeholder="请输入标题（例如：整租 小区名 2室 5000元）"
-            value={title}
-          />
-        </List>
+          <List
+            className={styles.title}
+            renderHeader={() => '房屋标题'}
+            data-role="rent-list"
+          >
+            <InputItem
+              placeholder="请输入标题（例如：整租 小区名 2室 5000元）"
+              value={title}
+            />
+          </List>
 
-        <List
-          className={styles.pics}
-          renderHeader={() => '房屋图像'}
-          data-role="rent-list"
-        >
-          <ImagePicker
-            files={tempSlides}
-            multiple={true}
-            className={styles.imgpicker}
-          />
-        </List>
+          <List
+            className={styles.pics}
+            renderHeader={() => '房屋图像'}
+            data-role="rent-list"
+          >
+            <ImagePicker
+              files={tempSlides}
+              multiple={true}
+              className={styles.imgpicker}
+            />
+          </List>
 
-        <List
-          className={styles.supporting}
-          renderHeader={() => '房屋配置'}
-          data-role="rent-list"
-        >
-          <HousePackge select />
-        </List>
+          <List
+            className={styles.supporting}
+            renderHeader={() => '房屋配置'}
+            data-role="rent-list"
+          >
+            <HousePackge select />
+          </List>
 
-        <List
-          className={styles.desc}
-          renderHeader={() => '房屋描述'}
-          data-role="rent-list"
-        >
-          <TextareaItem
-            rows={5}
-            placeholder="请输入房屋描述信息"
-            autoHeight
-            value={description}
-          />
-        </List>
+          <List
+            className={styles.desc}
+            renderHeader={() => '房屋描述'}
+            data-role="rent-list"
+          >
+            <TextareaItem
+              rows={5}
+              placeholder="请输入房屋描述信息"
+              autoHeight
+              value={description}
+            />
+          </List>
 
-        <Flex className={styles.bottom}>
-          <Flex.Item className={styles.cancel} onClick={this.onCancel}>
-            取消
+          <Flex className={styles.bottom}>
+            <Flex.Item className={styles.cancel} onClick={this.onCancel}>
+              取消
           </Flex.Item>
-          <Flex.Item className={styles.confirm} onClick={this.addHouse}>
-            提交
+            <Flex.Item className={styles.confirm} onClick={this.addHouse}>
+              提交
           </Flex.Item>
-        </Flex>
-      </div>
+          </Flex>
+        </div>
+      )}</Consumer>
     )
   }
 }
