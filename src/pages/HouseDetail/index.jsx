@@ -104,11 +104,11 @@ export default class HouseDetail extends Component {
         console.log(res);
 
         this.setState({ houseInfo: res.body })
-        
+
         this.renderMap(res.body.community, res.body.coord)
     }
 
-    async  getFavoriteStatus() {
+    async getFavoriteStatus() {
         const res = await API.get('/user/favorites/' + this.houseCode);
 
         res.status === 200 && this.setState({ isFavorite: res.body.isFavorite });
@@ -176,10 +176,9 @@ export default class HouseDetail extends Component {
         const { isFavorite } = this.state;
         const res = await API[isFavorite ? 'delete' : 'post']('/user/favorites/' + this.houseCode)
         if (res.status === 200) {
-            Toast.info((isFavorite ? '取消' : '添加') +'收藏成功！')
+            Toast.info((isFavorite ? '取消' : '添加') + '收藏成功！')
             this.setState({ isFavorite: !isFavorite })
-        } 
-             
+        } else Toast.fail('登录状态异常！')
     }
 
     favoriteHandler() {
@@ -190,7 +189,7 @@ export default class HouseDetail extends Component {
         } else {
             Modal.alert('请求登录', '您还没有登录，是否要登录？', [
                 { text: '取消' },
-                {text:'去登录', onPress: () => this.props.history.push('/login')}
+                { text: '去登录', onPress: () => this.props.history.push('/login') }
             ])
         }
     }
@@ -200,10 +199,10 @@ export default class HouseDetail extends Component {
             isLoading,
             isFavorite,
             houseInfo: {
-            houseImg,
-            tags,
-            oriented
-        } } = this.state
+                houseImg,
+                tags,
+                oriented
+            } } = this.state
         return (
             <div className={styles.root}>
                 {/* 导航栏 */}
@@ -217,7 +216,7 @@ export default class HouseDetail extends Component {
                 {/* 轮播图 */}
                 <div className={styles.slides}>
                     {!isLoading ? (
-                        <Carousel key={ houseImg.length } autoplay infinite autoplayInterval={5000}>
+                        <Carousel key={houseImg.length} autoplay infinite autoplayInterval={5000}>
                             {this.renderSwipers()}
                         </Carousel>
                     ) : (
@@ -233,7 +232,7 @@ export default class HouseDetail extends Component {
                     <Flex className={styles.tags}>
                         <Flex.Item>
                             {tags.map((i, idx) => (
-                                <span key={idx} className={[styles.tag, styles[`tag${idx % 3 + 1}`]].join(' ')}>
+                                <span key={idx} className={[styles.tag, styles[`tag${ idx % 3 + 1 }`]].join(' ')}>
                                     {i}
                                 </span>
                             ))}
@@ -350,7 +349,7 @@ export default class HouseDetail extends Component {
                 <Flex className={styles.fixedBottom}>
                     <Flex.Item onClick={this.favoriteHandler.bind(this)}>
                         <img
-                            src={BASE_URL + `/img/${ isFavorite ? '': 'un'}star.png`}
+                            src={BASE_URL + `/img/${ isFavorite ? '' : 'un' }star.png`}
                             className={styles.favoriteImg}
                             alt="收藏"
                         />
