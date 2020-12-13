@@ -1,6 +1,7 @@
 import React, { Suspense, lazy, Component } from 'react'
-import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Redirect, Link } from 'react-router-dom'
 import { AuthRoute } from './components/AuthRoute'
+import MyPage from './pages/MyPage'
 
 // 页面组件导入。
 const Home          = lazy(() => import('./pages/Home'))
@@ -45,6 +46,9 @@ export default class App extends Component {
                 <Router>
                     <Suspense fallback={<div>Loading..</div>}>
                         <div className="app">
+                            {/* 实验 */}
+                            <Link to="/test">test页面</Link>
+                            <Route path="/test" component={MyPage} />
                             <Route path="/" exact render={() => <Redirect to="/home" />} />
                             <Route path="/home" component={Home} />
                             <Route path="/citylist" component={CityList} />
