@@ -8,8 +8,8 @@ const includePathList = ['/user', '/admin']
 
 const excludePathList = ['/user/registered', '/user/login']
 
-const request = async (partialUrl, body, query, method = 'GET', contentType = 'application/json') => {
-    const needContent = ['POST', 'PUT'].includes(method);
+const request = async (partialUrl, body, query, method = 'GET', contentType = 'application/json', isNormal = true) => {
+    const needContent = ['POST', 'PUT'].includes(method) && isNormal;
     const needAuth = includePathList.some(i => partialUrl.startsWith(i)) && !excludePathList.some(i => partialUrl.startsWith(i))
 
     const promise = (await fetch(BASE_URL + partialUrl + (query ? queryString(query) : ''), {
@@ -37,5 +37,9 @@ export class API {
 
     static post(partialUrl, body, query, contentType) {
         return request(partialUrl, body, query, 'POST', contentType)
+    }
+
+    static postFile(partialUrl, body, query) {
+        return request(partialUrl, body, query, 'POST', null, false)
     }
 }
